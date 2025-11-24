@@ -6,9 +6,9 @@ class LoginView extends StatelessWidget {
   //
   const LoginView({super.key});
 
-  void _onSubmit(BuildContext ctx) {
+  void _onSubmit(BuildContext context) {
     final loginViewModel = LoginViewModel.instance;
-    final navigator = Navigator.of(ctx);
+    final navigator = Navigator.of(context);
 
     if (loginViewModel.doLogin()) {
       navigator.pushReplacement(
@@ -21,9 +21,9 @@ class LoginView extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext ctx) {
+  Widget build(BuildContext context) {
     final loginViewModel = LoginViewModel.instance;
-    final theme = Theme.of(ctx);
+    final theme = Theme.of(context);
 
     return SafeArea(
       child: Scaffold(
@@ -64,7 +64,7 @@ class LoginView extends StatelessWidget {
                           obscureText: true,
                           decoration: InputDecoration(
                             labelText: 'Password',
-                            errorText: loginViewModel.validatepassword(),
+                            errorText: loginViewModel.validatePassword(),
                             border: const OutlineInputBorder(),
                           ),
                         ),
@@ -74,7 +74,7 @@ class LoginView extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 ElevatedButton(
-                  onPressed: () => _onSubmit(ctx),
+                  onPressed: () => _onSubmit(context),
                   child: const Text('Log In'),
                 ),
                 const SizedBox(height: 64),

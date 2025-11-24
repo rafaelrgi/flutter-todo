@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:todo/core/config.dart';
+import 'package:todo/core/config/config.dart';
 import 'package:todo/ui/view_models/todo_view_model.dart';
+import 'package:todo/ui/widgets/datasource_radio_btn.dart';
 
 class ChooseDatasource extends StatelessWidget {
   //
   const ChooseDatasource({super.key});
 
   @override
-  Widget build(BuildContext ctx) {
+  Widget build(BuildContext context) {
     final todoViewModel = TodoViewModel.instance;
-    final navigator = Navigator.of(ctx);
+    final navigator = Navigator.of(context);
 
     return ListenableBuilder(
       listenable: todoViewModel,
@@ -44,15 +45,15 @@ class ChooseDatasource extends StatelessWidget {
                         mainAxisAlignment: .start,
                         children: [
                           DataSourceRadioBtn.fromDataSource(
-                            ctx,
+                            context,
                             DataSources.memory,
                           ),
                           DataSourceRadioBtn.fromDataSource(
-                            ctx,
+                            context,
                             DataSources.remoteApi,
                           ),
                           DataSourceRadioBtn.fromDataSource(
-                            ctx,
+                            context,
                             DataSources.localDb,
                           ),
                           Divider(height: 8, thickness: 1, color: Colors.grey),
@@ -70,68 +71,6 @@ class ChooseDatasource extends StatelessWidget {
                 ),
               );
       },
-    );
-  }
-}
-
-class DataSourceRadioBtn extends RadioBtn {
-  const DataSourceRadioBtn({
-    super.key,
-    required super.dataSource,
-    required super.selected,
-    required super.onPressed,
-  });
-
-  factory DataSourceRadioBtn.fromDataSource(BuildContext ctx, DataSources ds) {
-    final todoViewModel = TodoViewModel.instance;
-    final navigator = Navigator.of(ctx);
-
-    final selected = (ds == todoViewModel.dataSource);
-    return DataSourceRadioBtn(
-      dataSource: ds,
-      selected: selected,
-      onPressed: () async {
-        await todoViewModel.setDataSource(ds);
-        if (!ctx.mounted) return;
-        //returns true only when change the ds
-        navigator.pop(!selected);
-      },
-    );
-  }
-}
-
-class RadioBtn extends StatelessWidget {
-  //
-  final DataSources dataSource;
-  final void Function() onPressed;
-  final bool selected;
-
-  const RadioBtn({
-    super.key,
-    required this.dataSource,
-    required this.selected,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext ctx) {
-    final TextTheme textTheme = (Theme.of(ctx).textTheme);
-    final Color color = (textTheme.bodySmall!.color)!;
-
-    final IconData radioIco = selected
-        ? Icons.radio_button_checked
-        : Icons.radio_button_off_outlined;
-
-    return TextButton(
-      onPressed: onPressed,
-      child: Row(
-        children: [
-          Icon(radioIco, color: color),
-          Text('   ${dataSource.text}', style: textTheme.bodyMedium),
-          const SizedBox(width: 16),
-          Icon(dataSource.iconData, color: color),
-        ],
-      ),
     );
   }
 }

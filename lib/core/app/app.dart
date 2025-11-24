@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:todo/core/config.dart';
+import 'package:get_it/get_it.dart';
+import 'package:todo/core/app/app_controller.dart';
 import 'package:todo/ui/app_theme.dart';
 import 'package:todo/ui/pages/login_view.dart';
 import 'package:todo/ui/pages/todos_view.dart';
+import 'package:todo/ui/view_models/login_view_model.dart';
+import 'package:todo/ui/view_models/todo_view_model.dart';
 
-//------------------------------------------------------------------------------
 class TodoApp extends StatelessWidget {
   //
   const TodoApp({super.key});
 
+  static void configureDependencies() {
+    final getIt = GetIt.instance;
+    getIt.registerCachedFactory(() => LoginViewModel());
+    getIt.registerLazySingleton<TodoViewModel>(() => TodoViewModel());
+    getIt.registerLazySingleton<AppController>(() => AppController());
+  }
+
   @override
   Widget build(BuildContext context) {
+    final appController = AppController.instance;
+
     return ListenableBuilder(
       listenable: appController,
       builder: (context, _) {
@@ -33,27 +44,3 @@ class TodoApp extends StatelessWidget {
     );
   }
 }
-
-//------------------------------------------------------------------------------
-final appController = AppController();
-
-class AppController extends ChangeNotifier {
-  //
-  ThemeMode _type = ThemeMode.system;
-
-  ThemeMode get themeMode => _type;
-
-  AppController() {
-    _init();
-  }
-
-  void _init() async {
-    themeMode = await Config.getTheme();
-  }
-
-  set themeMode(ThemeMode val) {
-    _type = val;
-    notifyListeners();
-  }
-}
-//------------------------------------------------------------------------------

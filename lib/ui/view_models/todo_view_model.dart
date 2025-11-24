@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:todo/domain/todo_domain.dart';
 import 'package:todo/domain/models/todo.dart';
-import 'package:todo/core/config.dart';
+import 'package:todo/core/config/config.dart';
 
 class TodoViewModel extends ChangeNotifier {
   //

@@ -1,7 +1,7 @@
 import 'package:todo/domain/models/todo.dart';
 import 'package:todo/ui/view_models/todo_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:todo/core/ui_utils.dart';
+import 'package:todo/core/utils/ui_utils.dart';
 
 class TodoView extends StatelessWidget {
   //
@@ -13,37 +13,42 @@ class TodoView extends StatelessWidget {
   TodoView({super.key, required this.index})
     : _todo = todoViewModel.getForEditing(index);
 
-  Future<void> _saveItem(BuildContext ctx, int index, Todo todo) async {
+  Future<void> _saveItem(BuildContext context, int index, Todo todo) async {
     if (!todoViewModel.canSave(_todo)) return;
 
     var error = await todoViewModel.saveItem(index, todo);
-    if (!ctx.mounted) return;
+    if (!context.mounted) return;
     //error
     if (error.isNotEmpty) {
-      UiUtils.errorDialog(ctx, error, 'Saving failed!');
+      UiUtils.errorDialog(context, error, 'Saving failed!');
       return;
     }
     //sucess
-    Navigator.of(ctx).pop();
+    Navigator.of(context).pop();
   }
 
-  void _removeItem(BuildContext ctx, int index) {
-    final navigator = Navigator.of(ctx);
+  void _removeItem(BuildContext context, int index) {
+    final navigator = Navigator.of(context);
 
-    UiUtils.yesNoDialog(ctx, 'Confirm item deletion?', 'Delete item', () async {
-      navigator.pop();
-      var error = await todoViewModel.removeItem(index);
-      if (!ctx.mounted) return;
+    UiUtils.yesNoDialog(
+      context,
+      'Confirm item deletion?',
+      'Delete item',
+      () async {
+        navigator.pop();
+        var error = await todoViewModel.removeItem(index);
+        if (!context.mounted) return;
 
-      //error
-      if (error.isNotEmpty) {
-        UiUtils.errorDialog(ctx, error, 'Deletion failed!');
-        return;
-      }
-      //sucess
-      navigator.pop();
-      UiUtils.toast(ctx, 'Item deleted');
-    });
+        //error
+        if (error.isNotEmpty) {
+          UiUtils.errorDialog(context, error, 'Deletion failed!');
+          return;
+        }
+        //sucess
+        navigator.pop();
+        UiUtils.toast(context, 'Item deleted');
+      },
+    );
   }
 
   @override

@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 
 class UiUtils {
   //
-  static void toast(BuildContext ctx, String text, [bool clearPending = true]) {
-    final messenger = ScaffoldMessenger.of(ctx);
+  static void toast(
+    BuildContext context,
+    String text, [
+    bool clearPending = true,
+  ]) {
+    final messenger = ScaffoldMessenger.of(context);
     if (clearPending) {
       messenger.clearSnackBars();
     }
@@ -13,16 +17,16 @@ class UiUtils {
   }
 
   static Future<void> errorDialog(
-    BuildContext ctx,
+    BuildContext context,
     String message,
     String title,
   ) {
-    final navigator = Navigator.of(ctx);
+    final navigator = Navigator.of(context);
 
     return showDialog(
-      context: ctx,
+      context: context,
       barrierColor: Colors.black, //.withValues(alpha: 0.9),
-      builder: (BuildContext ctx) {
+      builder: (BuildContext context) {
         return Dialog(
           child: Padding(
             padding: const .symmetric(horizontal: 8, vertical: 16),
@@ -47,15 +51,15 @@ class UiUtils {
   }
 
   static Future<void> alertDialog(
-    BuildContext ctx,
+    BuildContext context,
     String message,
     String title,
   ) {
-    final navigator = Navigator.of(ctx);
+    final navigator = Navigator.of(context);
 
     return showDialog(
-      context: ctx,
-      builder: (BuildContext ctx) {
+      context: context,
+      builder: (BuildContext context) {
         return Dialog(
           child: Padding(
             padding: const .symmetric(horizontal: 8, vertical: 16),
@@ -80,12 +84,12 @@ class UiUtils {
   }
 
   static void yesNoDialog(
-    BuildContext ctx,
+    BuildContext context,
     String message,
     String title,
     VoidCallback? onConfirm,
   ) {
-    final navigator = Navigator.of(ctx);
+    final navigator = Navigator.of(context);
 
     Widget yesButton = TextButton(onPressed: onConfirm, child: Text("Yes"));
     Widget noButton = TextButton(
@@ -100,7 +104,7 @@ class UiUtils {
     );
 
     showDialog(
-      context: ctx,
+      context: context,
       builder: (BuildContext context) {
         return alert;
       },

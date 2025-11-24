@@ -1,4 +1,4 @@
-import 'package:todo/core/config.dart';
+import 'package:todo/core/config/config.dart';
 import 'package:todo/data/repositories/i_todo_repository.dart';
 import 'package:todo/data/repositories/todo_repository_Api.dart';
 import 'package:todo/data/repositories/todo_repository_db.dart';

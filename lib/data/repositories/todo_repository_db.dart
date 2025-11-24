@@ -1,4 +1,4 @@
-import 'package:todo/core/db.dart';
+import 'package:todo/core/data/db.dart';
 import 'package:todo/domain/models/todo.dart';
 import 'package:todo/data/repositories/i_todo_repository.dart';
 

@@ -1,29 +1,95 @@
 // This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:todo/core/app.dart';
+import 'package:get_it/get_it.dart';
+import 'package:todo/core/app/app.dart';
+import 'package:todo/ui/pages/todos_view.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const TodoApp());
+  // Setup before each test
+  setUp(() {});
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  // Teardown after each test
+  tearDown(() {
+    GetIt.I.reset();
   });
+
+  test('TodoApp.configureDependencies() runs without throwing', () {
+    expect(() => TodoApp.configureDependencies(), returnsNormally);
+  });
+
+  testWidgets('TodoApp widget builds', (WidgetTester tester) async {
+    await _runApp(tester);
+    expect(find.byType(TodoApp), findsOneWidget);
+  });
+
+  testWidgets('Login - empty login and password', (WidgetTester tester) async {
+    await _runApp(tester);
+    final Finder loginField = find.bySemanticsLabel('Login');
+    expect(loginField, findsOneWidget);
+    final Finder passwordField = find.bySemanticsLabel('Password');
+    expect(passwordField, findsOneWidget);
+
+    final buttonFinder = find.text('Log In');
+    expect(buttonFinder, findsOneWidget);
+    await tester.tap(buttonFinder);
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('Please inform your login'), findsOneWidget);
+    expect(find.text('Please inform your password'), findsOneWidget);
+  });
+
+  testWidgets('Login - empty password', (WidgetTester tester) async {
+    await _runApp(tester);
+    final Finder loginField = find.bySemanticsLabel('Login');
+    expect(loginField, findsOneWidget);
+    final Finder passwordField = find.bySemanticsLabel('Password');
+    expect(passwordField, findsOneWidget);
+
+    await tester.enterText(loginField, 'user');
+    await tester.pump();
+    expect(find.text('user'), findsOneWidget);
+
+    final buttonFinder = find.text('Log In');
+    expect(buttonFinder, findsOneWidget);
+    await tester.tap(buttonFinder);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Please inform your login'), findsNothing);
+    expect(find.text('Please inform your password'), findsOneWidget);
+  });
+
+  testWidgets('Login - valid information', (WidgetTester tester) async {
+    await _runApp(tester);
+    expect(find.byType(TodosView), findsNothing);
+
+    final Finder loginField = find.bySemanticsLabel('Login');
+    expect(loginField, findsOneWidget);
+    final Finder passwordField = find.bySemanticsLabel('Password');
+    expect(passwordField, findsOneWidget);
+    final buttonFinder = find.text('Log In');
+    expect(buttonFinder, findsOneWidget);
+
+    await tester.enterText(loginField, 'user');
+    await tester.pump();
+    expect(find.text('user'), findsOneWidget);
+
+    await tester.enterText(passwordField, 'secret');
+    await tester.pump();
+    expect(find.text('secret'), findsOneWidget);
+
+    await tester.tap(buttonFinder);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Please inform your login'), findsNothing);
+    expect(find.text('Please inform your password'), findsNothing);
+    expect(find.byType(TodosView), findsOneWidget);
+  });
+}
+
+//dont repeat yourself!
+Future<void> _runApp(WidgetTester tester) async {
+  TodoApp.configureDependencies();
+  await tester.pumpWidget(TickerMode(enabled: false, child: const TodoApp()));
+  await tester.pumpAndSettle();
 }

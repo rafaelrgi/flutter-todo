@@ -29,10 +29,10 @@ class LoginViewModel extends ChangeNotifier {
         : 'Please inform your login';
   }
 
-  String? validatepassword() {
+  String? validatePassword() {
     return !_passwordChanged || _password.isNotEmpty
         ? null
-        : 'Please inform your login';
+        : 'Please inform your password';
   }
 
   bool doLogin() {
